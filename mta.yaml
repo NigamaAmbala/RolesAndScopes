@@ -1,0 +1,140 @@
+_schema-version: "3.1"
+ID: Rolls-Scopes
+description: A simple CAP project.
+version: 1.0.0
+modules:
+- name: Rolls-Scopes-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: Rolls-Scopes-db
+  - name: uaa_Rolls-Scopes
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    readiness-health-check-http-endpoint: /health
+    readiness-health-check-type: http
+  build-parameters:
+    builder: npm
+- name: Rolls-Scopes-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: Rolls-Scopes-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: Rolls-Scopes-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: Rolls-Scopes-destination-service
+    parameters:
+      content-target: true
+  - name: Rolls-Scopes_html_repo_host
+    parameters:
+      service-key:
+        name: Rolls-Scopes_html_repo_host-key
+  - name: uaa_Rolls-Scopes
+    parameters:
+      service-key:
+        name: uaa_Rolls-Scopes-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: rolls_Rolls_Scopes_html_repo_host
+          ServiceInstanceName: Rolls-Scopes-html5-app-host-service
+          ServiceKeyName: Rolls-Scopes_html_repo_host-key
+          sap.cloud.service: rolls
+        - Authentication: OAuth2UserTokenExchange
+          Name: rolls_uaa_Rolls_Scopes
+          ServiceInstanceName: Rolls-Scopes-xsuaa-service
+          ServiceKeyName: uaa_Rolls-Scopes-key
+          sap.cloud.service: rolls
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: Rolls-Scopes-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: Rolls-Scopes_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - comappfioriproject1.zip
+      name: comappfioriproject1
+      target-path: resources/
+- name: comappfioriproject1
+  type: html5
+  path: app/fioriproject1
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: Rolls-Scopes-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: Rolls-Scopes-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            HTML5.DynamicDestination: true
+            HTML5.ForwardAuthToken: true
+            Name: Rolls-Scopes-srv-api
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv-api/srv-url}
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: Rolls-Scopes-destination-service
+    service-plan: lite
+  requires:
+  - name: srv-api
+- name: Rolls-Scopes_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: Rolls-Scopes-html5-app-host-service
+    service-plan: app-host
+- name: uaa_Rolls-Scopes
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      tenant-mode: dedicated
+      xsappname: Rolls-Scopes-${org}-${space}
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: Rolls-Scopes-xsuaa-service
+    service-plan: application
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm ci
+    - npx cds build --production

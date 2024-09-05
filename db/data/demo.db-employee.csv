@@ -1,0 +1,6 @@
+ID,fname,lname,gender,dob,age,email,phonenumber,department_ID
+29fc5eb-d7eb-4824-85c4-221026c60ddb,Ryka,Mital,Female,1990-01-01,26,Ryka.Mital@xyz.com,9876754326,a3c85a0c-6073-4c7f-8468-1f3dd79bb8de
+455b744d-8e33-4ca5-ada1-91ce6c3447bc,Chiranjivi,Seshadri,Male,1990-02-01,28,Chiranjivi.Seshadri@abc.com,8564543278,3e274a93-8681-4d89-9362-2a94f4089038
+643ec8c0-b128-4af5-8a27-3c9d261fed10,Shresth,Majumdar,Male,1987-01-01,30,Shresth.Majumdar@abc.com,9065754376,3e274a93-8681-4d89-9362-2a94f4089038
+c1fbef5f-8771-4c77-9f26-219470eb8935,Samarth,Joshi,Female,1985-01-09,45,Samarth.Joshi@xyz.com,9878654532,a3c85a0c-6073-4c7f-8468-1f3dd79bb8de
+2239b1c7-acb3-42d1-b8af-8fd608446f92,Akhil,Shanker,Male,1996-07-23,35,Akhil.Shanker@xyz.com,9870653654,3e274a93-8681-4d89-9362-2a94f4089038

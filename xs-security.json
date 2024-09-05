@@ -1,0 +1,88 @@
+{
+  "xsappname": "Rolls-Scopes",
+  "tenant-mode": "dedicated",
+  "description": "Security profile of called application",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Admin"
+    },
+    {
+      "name": "$XSAPPNAME.Nigama",
+      "description": "Nigama"
+    },
+    {
+      "name": "$XSAPPNAME.Kalyani",
+      "description": "Kalyani"
+    },
+    {
+      "name": "$XSAPPNAME.Deva",
+      "description": "Deva"
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "Admin",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.Admin"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "Nigama",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.Nigama"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "Kalyani",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.Kalyani"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "Deva",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.Deva"
+      ],
+      "attribute-references": []
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "RCEmployeeCAPAdmin",
+      "description": "Admin Can Create, Update, Delete The Data",
+      "role-template-references": [
+        "$XSAPPNAME.Admin"
+      ]
+    },
+    {
+      "name": "RCEmployeeCAPNigama",
+      "description": "Nigama Can Read The Data",
+      "role-template-references": [
+        "$XSAPPNAME.Nigama"
+      ]
+    },
+    {
+      "name": "RCEmployeeCAPKalyani",
+      "description": "Kalyani Can Read Update The Data",
+      "role-template-references": [
+        "$XSAPPNAME.Kalyani"
+      ]
+    },
+    {
+      "name": "RCEmployeeCAPDeva",
+      "description": "Deva Can Read The Data",
+      "role-template-references": [
+        "$XSAPPNAME.Deva"
+      ]
+    }
+  ]
+}
